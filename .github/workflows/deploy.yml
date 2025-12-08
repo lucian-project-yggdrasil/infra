@@ -1,0 +1,40 @@
+name: Deploy Nucleus Infrastructure
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - "**.bicep"
+      - "**.bicepparam"
+      - ".github/workflows/**"
+
+permissions:
+  id-token: write # Required for OIDC login
+  contents: read
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    name: Provision Azure Resources
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v3
+
+      - name: Azure Login (OIDC)
+        uses: azure/login@v2
+        with:
+          client-id: ${{ secrets.AZURE_CLIENT_ID }}
+          tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+          subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+
+      - name: Deploy Bicep
+        uses: azure/cli@v2
+        with:
+          inlineScript: |
+            az deployment group create \
+              --name "deploy-nucleus-ci-${{ github.run_number }}" \
+              --resource-group rg-yggdrasil-nucleus \
+              --template-file main.bicep \
+              --parameters main.bicepparam \
+              --parameters budgetEmails='${{ secrets.BUDGET_EMAILS }}'
