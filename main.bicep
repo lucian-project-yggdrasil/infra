@@ -37,6 +37,17 @@ module budget 'modules/cost/budget.bicep' = {
   }
 }
 
+// Deploy App 1 (Valhalla)
+module valhalla 'modules/web/swa.bicep' = {
+  name: 'deploy-valhalla'
+  params: {
+    location: 'eastasia' // SWA is only available in certain regions
+    appName: 'swa-valhalla'
+  }
+}
+
+output valhallaHostname string = valhalla.outputs.defaultHostname
+
 output cosmosEndpoint string = cosmos.outputs.accountEndpoint
 output cosmosDatabaseName string = cosmos.outputs.databaseName
 output appInsightsConnectionString string = monitoring.outputs.appInsightsConnectionString
