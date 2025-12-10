@@ -1,6 +1,7 @@
 param location string
 param logAnalyticsName string = 'log-yggdrasil'
 param appInsightsName string = 'appi-yggdrasil'
+param tags object = {}
 
 // Log Analytics Workspace
 resource logWorkspace 'Microsoft.OperationalInsights/workspaces@2022-10-01' = {
@@ -12,6 +13,7 @@ resource logWorkspace 'Microsoft.OperationalInsights/workspaces@2022-10-01' = {
     }
     retentionInDays: 30
   }
+  tags: tags
 }
 
 // Application Insights
@@ -25,6 +27,7 @@ resource appInsights 'Microsoft.Insights/components@2020-02-02' = {
     publicNetworkAccessForIngestion: 'Enabled'
     publicNetworkAccessForQuery: 'Enabled'
   }
+  tags: tags
 }
 
 output logAnalyticsId string = logWorkspace.id

@@ -1,6 +1,7 @@
 param location string
 param accountName string
 param databaseName string = 'yggdrasil-data'
+param tags object = {}
 
 // Cosmos DB Account (Free Tier)
 resource account 'Microsoft.DocumentDB/databaseAccounts@2024-05-15' = {
@@ -21,6 +22,7 @@ resource account 'Microsoft.DocumentDB/databaseAccounts@2024-05-15' = {
       }
     ]
   }
+  tags: tags
 }
 
 // Shared Throughput Database
@@ -35,6 +37,7 @@ resource database 'Microsoft.DocumentDB/databaseAccounts/sqlDatabases@2024-05-15
       throughput: 1000
     }
   }
+  tags: tags
 }
 
 output accountId string = account.id

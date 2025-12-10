@@ -1,5 +1,6 @@
 param location string
 param appName string
+param tags object = {}
 
 resource swa 'Microsoft.Web/staticSites@2022-09-01' = {
   name: appName
@@ -14,6 +15,7 @@ resource swa 'Microsoft.Web/staticSites@2022-09-01' = {
     allowConfigFileUpdates: true
     enterpriseGradeCdnStatus: 'Disabled'
   }
+  tags: tags
 }
 
 output name string = swa.name
